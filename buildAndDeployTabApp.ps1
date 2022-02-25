@@ -1,4 +1,5 @@
 # Add command to clone your git repo to local and navigate to repo folder
+ Install-Module posh-git -Scope CurrentUser -Force
  git clone https://github.com/v-royavinash/fxrepo.git
  cd \fxrepo
 
