@@ -75,8 +75,13 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 @REM IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Restore npm packages
-echo Restoring npm packages (this can take several minutes)
-pushd "%DEPLOYMENT_SOURCE%\tabs\"
+echo Restoring npm packages 1 (this can take several minutes)
+echo "%DEPLOYMENT_SOURCE%"
+pushd "%DEPLOYMENT_SOURCE%"
+
+echo Restoring npm packages 2 (this can take several minutes)
+echo "%DEPLOYMENT_SOURCE%\tabs"
+pushd "%DEPLOYMENT_SOURCE%\tabs"
 
 call :ExecuteCmd npm install --no-audit
 IF !ERRORLEVEL! NEQ 0 (
@@ -88,7 +93,7 @@ IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 3. Build the client app
 echo Building the client app (this can take several minutes)
-pushd "%DEPLOYMENT_SOURCE%\tabs\"
+pushd "%DEPLOYMENT_SOURCE%\tabs"
 @REM call :ExecuteCmd npm run build
 call :ExecuteCmd npm run-script build
 popd

@@ -2,8 +2,8 @@ import React from 'react';
 import { TeamsUserCredential, createMicrosoftGraphClient } from "@microsoft/teamsfx";
 import { Client } from "@microsoft/microsoft-graph-client";
 import { Providers, ProviderState, SimpleProvider } from '@microsoft/mgt-element';
-import { Button } from "@fluentui/react-northstar";
-import { MessageBar, MessageBarType, } from '@fluentui/react';
+import { Button, Loader } from "@fluentui/react-northstar";
+import { MessageBar, MessageBarType, initializeIcons } from '@fluentui/react';
 import Dashboard from './Dashboard';
 import EocHeader from './EocHeader';
 import siteConfig from '../config/siteConfig.json';
@@ -15,6 +15,8 @@ import "../scss/EOCHome.module.scss";
 import * as microsoftTeams from "@microsoft/teams-js";
 import LocalizedStrings from 'react-localization';
 import { localizedStrings } from "../locale/LocaleStrings";
+
+initializeIcons();
 
 interface IEOCHomeState {
     showLoginPage: boolean;
@@ -28,10 +30,13 @@ interface IEOCHomeState {
     locale: string;
     currentUserName: string;
     currentUserId: string;
+    loaderMessage: string;
 }
 
 interface IEOCHomeProps {
 }
+
+let localeStrings = new LocalizedStrings(localizedStrings);
 
 export class EOCHome extends React.Component<IEOCHomeProps, IEOCHomeState>  {
     private credential = new TeamsUserCredential();
@@ -60,7 +65,8 @@ export class EOCHome extends React.Component<IEOCHomeProps, IEOCHomeState>  {
             messageBarType: "",
             locale: "",
             currentUserName: "",
-            currentUserId: ""
+            currentUserId: "",
+            loaderMessage: localeStrings.genericLoaderMessage,
         }
     }
 
@@ -229,14 +235,18 @@ export class EOCHome extends React.Component<IEOCHomeProps, IEOCHomeState>  {
     }
 
     public render() {
-        let localeStrings = new LocalizedStrings(localizedStrings);
+        // let localeStrings = new LocalizedStrings(localizedStrings);
         if (this.state.locale && this.state.locale !== "") {
             localeStrings.setLanguage(this.state.locale);
         }
 
         return (
             <>
-                {this.state.locale !== "" &&
+            {this.state.locale === "" ?
+                <>
+                    <Loader label={this.state.loaderMessage} size="largest" />
+                </>
+                :                
                     <>
                         <EocHeader clickcallback={() => { }}
                             localeStrings={localeStrings}

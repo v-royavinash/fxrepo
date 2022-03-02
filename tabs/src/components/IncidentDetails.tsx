@@ -18,6 +18,12 @@ import {
     RoleAssignments
 } from "./ICreateIncident";
 import { IInputRegexValidationStates } from '../common/CommonService';
+import { ITooltipHostStyles, TooltipHost } from "@fluentui/react/lib/Tooltip";
+import { Icon } from "@fluentui/react/lib/Icon";
+
+const calloutProps = { gapSpace: 0 };
+
+const hostStyles: Partial<ITooltipHostStyles> = { root: { display: 'inline-block', cursor: 'pointer' } };
 
 export interface IIncidentDetailsProps {
     graph: Client;
@@ -87,6 +93,7 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
         this.onIncidentStatusChange = this.onIncidentStatusChange.bind(this);
         this.onRoleChange = this.onRoleChange.bind(this);
 
+
         // localized messages for people pickers
         LocalizationHelper.strings = {
             _components: {
@@ -103,7 +110,6 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
 
     public async componentDidMount() {
         this.getDropdownOptions();
-
         //Event listener for screen resizing
         window.addEventListener("resize", this.resize.bind(this));
         this.resize();
@@ -638,7 +644,7 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
             // call method to create Teams group
             this.createTeamGroup(incidentId).then(async (groupInfo) => {
                 try {
-                    console.log(constants.infoLogPrefix + "Teams group created");
+                    console.log(constants.infoLogPrefix + "Teams group created on - " + new Date());
 
                     // wait for 2 seconds to ensure team group is available via graph API
                     await this.timeout(2000);
@@ -646,7 +652,7 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
                     // create associated team with the group
                     const teamInfo = await this.createTeam(groupInfo);
                     if (teamInfo.status) {
-                        console.log(constants.infoLogPrefix + "Teams created");
+                        console.log(constants.infoLogPrefix + "Teams created on - " + new Date());
                         // create channels
                         const channelCreatedInfo: any = await this.createChannels(teamInfo.data);
                         console.log(constants.infoLogPrefix + "channels created");
@@ -887,7 +893,7 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
     // create Team associated with Teams group
     private async createTeam(groupInfo: any): Promise<any> {
         return new Promise(async (resolve) => {
-            let maxTeamCreationAttempt = 20, isTeamCreated = false;
+            let maxTeamCreationAttempt = 5, isTeamCreated = false;
 
             let result = {
                 status: false,
@@ -908,11 +914,13 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
 
                     // update the result object
                     if (updatedTeamInfo) {
+                        console.log(constants.infoLogPrefix + "Teams created on - " + new Date());
                         isTeamCreated = true;
                         result.data = updatedTeamInfo;
                         result.status = true;
                     }
                 } catch (updationError: any) {
+                    console.log(constants.infoLogPrefix + "Teams creation failed on - " + new Date());
                     console.error(
                         constants.errorLogPrefix + "CreateIncident_CreateTeam \n",
                         JSON.stringify(updationError)
@@ -924,8 +932,9 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
                     }
                 }
                 maxTeamCreationAttempt--;
+                await this.timeout(10000);
             }
-            console.log(constants.infoLogPrefix + "createTeam_No Of Attempt", (20 - maxTeamCreationAttempt), result);
+            console.log(constants.infoLogPrefix + "createTeam_No Of Attempt", (5 - maxTeamCreationAttempt), result);
             resolve(result);
         });
     }
@@ -1051,6 +1060,7 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
                 const channelGraphEndpoint = graphConfig.teamsGraphEndpoint + "/" + team_id + graphConfig.channelsGraphEndpoint;
                 const channelObj = {
                     "displayName": constants.Assessment,
+                    isFavoriteByDefault: true
                 };
 
                 const channelResult = await this.dataService.createChannel(channelGraphEndpoint, this.props.graph, channelObj);
@@ -1095,7 +1105,8 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
 
                 const tabObj = {
                     "displayName": constants.Announcements,
-                    "description": ""
+                    "description": "",
+                    isFavoriteByDefault: true
                 };
                 const channelResult = await this.dataService.sendGraphPostRequest(this.graphEndpoint, this.props.graph, tabObj);
                 console.log(constants.infoLogPrefix + "News tab created");
@@ -1425,6 +1436,13 @@ class IncidentDetails extends React.PureComponent<IIncidentDetailsProps, IIncide
                                             </div>
                                             <div className="incident-grid-item">
                                                 <label className="people-picker-label">{this.props.localeStrings.fieldIncidentCommander}</label>
+                                                <TooltipHost
+                                                    content={this.props.localeStrings.infoIncCommander}
+                                                    calloutProps={calloutProps}
+                                                    styles={hostStyles}
+                                                >
+                                                    <Icon aria-label="Info" iconName="Info" className="incCommanderInfoIcon" />
+                                                </TooltipHost>
                                                 <PeoplePicker
                                                     title={this.props.localeStrings.fieldIncidentCommander}
                                                     selectionMode="single"

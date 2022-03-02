@@ -275,7 +275,7 @@ export default class UpdateIncident extends Component<IUpdateIncidentProps, IUpd
                                             fluid={true}
                                             value={this.props.incidentData ? this.props.incidentData.incidentId : ""}
                                             disabled
-                                            id="popup-text-field-disabled"
+                                            className="popup-text-field-disabled"
                                         />
                                     </div>
                                     <div className="popup-grid-item">
@@ -286,7 +286,7 @@ export default class UpdateIncident extends Component<IUpdateIncidentProps, IUpd
                                             fluid={true}
                                             value={this.state.updateIncidentItem ? (this.state.updateIncidentItem.incidentStatus ? this.state.updateIncidentItem.incidentStatus : '') : ''}
                                             onChange={this.onIncidentStatusChange}
-                                            id="popup-dropdown"
+                                            className="popup-dropdown"
                                         />
                                     </div>
                                 </Col>
@@ -299,7 +299,7 @@ export default class UpdateIncident extends Component<IUpdateIncidentProps, IUpd
                                             maxLength={constants.maxCharLengthForSingleLine}
                                             value={this.state.updateIncidentItem ? this.state.updateIncidentItem.incidentName : ""}
                                             onChange={(evt) => this.onTextInputChange(evt, "incidentName")}
-                                            id="popup-text-field"
+                                            className="popup-text-field"
                                         />
                                         {this.state.inputValidation.incidentNameHasError && (
                                             <label className="message-label">{this.props.localeStrings.incidentNameRequired}</label>
@@ -320,7 +320,7 @@ export default class UpdateIncident extends Component<IUpdateIncidentProps, IUpd
                                             maxLength={constants.maxCharLengthForSingleLine}
                                             value={this.state.updateIncidentItem ? this.state.updateIncidentItem.location : ""}
                                             onChange={(evt) => this.onTextInputChange(evt, "location")}
-                                            id="popup-text-field"
+                                            className="popup-text-field"
                                         />
                                         {this.state.inputValidation.incidentLocationHasError && (
                                             <label className="message-label">{this.props.localeStrings.locationRequired}</label>
@@ -339,7 +339,7 @@ export default class UpdateIncident extends Component<IUpdateIncidentProps, IUpd
                                             fluid={true}
                                             value={this.props.incidentData ? this.props.incidentData.incidentCommander : ""}
                                             disabled
-                                            id="popup-text-field-disabled"
+                                            className="popup-text-field-disabled"
                                         />
                                     </div>
                                     <div className="popup-grid-item">
@@ -350,7 +350,7 @@ export default class UpdateIncident extends Component<IUpdateIncidentProps, IUpd
                                             fluid={true}
                                             defaultValue={this.props.incidentData.startDate}
                                             disabled
-                                            id="popup-text-field-disabled"
+                                            className="popup-text-field-disabled"
                                         />
                                     </div>
                                 </Col>
