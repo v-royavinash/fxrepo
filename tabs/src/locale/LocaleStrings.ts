@@ -88,6 +88,7 @@ const localizedStrings = {
         phIncidentId: "Incident Id",
         btnClose: "Close",
         btnUpdateInc: "Update Incident",
+        infoIncCommander: "Current user creating the incident and Incident Commander will both be added as owners to the Incident Team.",
         // More Info callout
         aboutApp: "About the App",
         appDescription: "The Teams Emergency Operations Center was created after seeing the impact and value that standard and centralized Microsoft Teams creation could make when responding to an incident. This app template is created to help showcase and inspire new ways on how you can leverage the productivity tools of Microsoft 365 to quickly and efficiently respond in times of need.",

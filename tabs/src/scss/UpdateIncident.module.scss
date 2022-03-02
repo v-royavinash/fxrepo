@@ -4,6 +4,54 @@
         color: red !important;
     }
 
+    .popup-text-field,
+    .popup-date-field {
+        input {
+            height: 35px;
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+    }
+
+    .popup-text-field-disabled {
+        input {
+            height: 35px;
+            background-color: #D3D3D3;
+            color: #000000;
+            cursor: not-allowed;
+        }
+    }
+
+    .popup-dropdown>div {
+
+        div:nth-child(1) {
+            height: 35px;
+            background-color: #FFFFFF;
+            border-bottom-color: #FFFFFF;
+            border-radius: 0.125rem;
+        }
+
+        ul,
+        li {
+            background-color: #FFFFFF !important;
+            color: #000000;
+            border-color: #FFFFFF;
+        }
+
+        li>div>div {
+            color: #000000;
+        }
+
+        button {
+            color: #000000;
+
+            span {
+                font-weight: normal;
+            }
+        }
+    }
+
+
 }
 
 
@@ -57,47 +105,6 @@ div[id="incident-popup"] {
             opacity: 1;
         }
 
-        input[id="popup-text-field-disabled"] {
-            height: 35px;
-            background-color: #D3D3D3;
-            color: #000000;
-        }
-
-        input[id="popup-text-field"],
-        input[id="popup-date-field"] {
-            height: 35px;
-            background-color: #FFFFFF;
-            color: #000000;
-        }
-
-        div[id="popup-dropdown"] {
-
-            div:nth-child(1) {
-                height: 35px;
-                background-color: #FFFFFF;
-                border-bottom-color: #FFFFFF;
-                border-radius: 0.125rem;
-            }
-
-            ul,
-            li {
-                background-color: #FFFFFF !important;
-                color: #000000;
-                border-color: #FFFFFF;
-            }
-
-            li>div>div {
-                color: #000000;
-            }
-
-            button {
-                color: #000000;
-
-                span {
-                    font-weight: normal;
-                }
-            }
-        }
         label[class="message-label"] {
             color: #f26e86;
         }

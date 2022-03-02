@@ -22,7 +22,7 @@
             height: 40px;
             background-color: #FFFFFF;
             font: normal normal normal 14px/21px Segoe UI;
-            color: #979593;
+            color: #727170;
             opacity: 1;
         }
     }
@@ -52,7 +52,7 @@
 
             span {
                 font: normal normal normal 14px/21px Segoe UI;
-                color: #979593;
+                color: #727170;
                 opacity: 1;
             }
         }
@@ -146,7 +146,12 @@
             }
         }
     }
+
+    .incCommanderInfoIcon {
+        padding-left: 3px;
+    }
 }
+
 
 div[class="incident-details"] {
     background: #F4F4F4 0% 0% no-repeat padding-box;
