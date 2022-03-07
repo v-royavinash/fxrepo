@@ -50,8 +50,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "eject": "react-scripts eject",
-        "preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions"
+        "eject": "react-scripts eject"
     },
     "eslintConfig": {
         "extends": [
