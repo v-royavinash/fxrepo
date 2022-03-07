@@ -83,114 +83,89 @@
     }
   },
   "variables": {
-    "resourceBaseName": "[parameters('resourceBaseName')]",
-    "storageName": "[format('{0}tab', variables('resourceBaseName'))]",
-    "storageSku": "Standard_LRS",
-    "identityName": "[format('{0}', variables('resourceBaseName'))]",
-    "sku": "F1",
-    "serverFarmsName": "[format('{0}simpleAuth', variables('resourceBaseName'))]",
-    "webAppName": "[format('{0}simpleAuth', variables('resourceBaseName'))]",
-    "simpleAuthPackageUri": "https://github.com/OfficeDev/TeamsFx/releases/download/simpleauth@0.1.0/Microsoft.TeamsFx.SimpleAuth_0.1.0.zip",
-    "ClientId": "[parameters('ClientId')]",
-    "ClientSecret": "[parameters('ClientSecret')]",
-    "TenantId": "[parameters('TenantId')]",
-    "m365OauthAuthorityHost": "[parameters('m365OauthAuthorityHost')]",
-    "oauthAuthority": "[uri(parameters('m365OauthAuthorityHost'), parameters('TenantId'))]",
-    "aadMetadataAddress": "[uri(parameters('m365OauthAuthorityHost'), format('{0}/v2.0/.well-known/openid-configuration', parameters('TenantId')))]",
-    "teamsMobileOrDesktopAppClientId": "1fec8e78-bce4-4aaf-ab1b-5451cc387264",
-    "teamsWebAppClientId": "5e3ce6c0-2b1f-4285-8d4b-75ee78787346",
-    "officeWebAppClientId1": "4345a7b9-9a63-4910-a426-35363201d503",
-    "officeWebAppClientId2": "4765445b-32c6-49b0-83e6-1d93765276ca",
-    "outlookDesktopAppClientId": "d3590ed6-52b3-4102-aeff-aad2292ab01c",
-    "outlookWebAppClientId": "00000002-0000-0ff1-ce00-000000000000",
-    "authorizedClientApplicationIds": "[format('{0};{1};{2};{3};{4};{5}', variables('teamsMobileOrDesktopAppClientId'), variables('teamsWebAppClientId'), variables('officeWebAppClientId1'), variables('officeWebAppClientId2'), variables('outlookDesktopAppClientId'), variables('outlookWebAppClientId'))]",
-    "m365ApplicationIdUri": "",
-    "botAppName": "[parameters('resourceBaseName')]",
+    "siteName": "[parameters('resourceBaseName')]",
     "hostingPlanName": "[parameters('resourceBaseName')]",
-    "storageAccountName": "[uniquestring(concat(resourceGroup().id, parameters('resourceBaseName')))]",
     "appInsightsName": "[parameters('resourceBaseName')]",
     "sharedSkus": [
       "Free",
       "Shared"
     ],
     "isSharedPlan": "[contains(variables('sharedSkus'), parameters('hostingPlanSku'))]",
-    "skuFamily": "[if(equals(parameters('hostingPlanSku'), 'Shared'), 'D', take(parameters('hostingPlanSku'), 1))]",
-    "tabAppDomain": "[concat(variables('botAppName'), '.azurewebsites.net')]",
-    "tabAppUrl": "[concat('https://', variables('tabAppDomain'))]"
+    "skuFamily": "[if(equals(parameters('hostingPlanSku'), 'Shared'), 'D', take(parameters('hostingPlanSku'), 1))]"
   },
   "resources": [
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
-      "name": "frontendHostingProvision",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "resourceBaseName": {
-            "value": "[parameters('resourceBaseName')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.4.1124.51302",
-              "templateHash": "4658177992051646011"
-            }
-          },
-          "parameters": {
-            "resourceBaseName": {
-              "type": "string",
-              "minLength": 1,
-              "metadata": {
-                "description": "The base name to use for the resources that will be provisioned."
-              }
-            }
-          },
-          "variables": {
-            "resourceBaseName": "[parameters('resourceBaseName')]",
-            "storageName": "[format('{0}tab', variables('resourceBaseName'))]",
-            "storageSku": "Standard_LRS",
-            "tabAppDomain": "[concat(variables('resourceBaseName'), '.azurewebsites.net')]",
-            "tabAppUrl": "[concat('https://', variables('tabAppDomain'))]"
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Storage/storageAccounts",
-              "apiVersion": "2021-06-01",
-              "name": "[variables('storageName')]",
-              "kind": "StorageV2",
-              "location": "[resourceGroup().location]",
-              "properties": {
-                "supportsHttpsTrafficOnly": true
-              },
-              "sku": {
-                "name": "[variables('storageSku')]"
-              }
-            }
-          ],
-          "outputs": {
-            "resourceId": {
-              "type": "string",
-              "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
-            },
-            "endpoint": {
-              "type": "string",
-              "value": "[variables('tabAppUrl')]"
-            },
-            "domain": {
-              "type": "string",
-              "value": "[variables('tabAppDomain')]"
-            }
-          }
-        }
-      }
-    },
+    // {
+    //   "type": "Microsoft.Resources/deployments",
+    //   "apiVersion": "2020-10-01",
+    //   "name": "frontendHostingProvision",
+    //   "properties": {
+    //     "expressionEvaluationOptions": {
+    //       "scope": "inner"
+    //     },
+    //     "mode": "Incremental",
+    //     "parameters": {
+    //       "resourceBaseName": {
+    //         "value": "[parameters('resourceBaseName')]"
+    //       }
+    //     },
+    //     "template": {
+    //       "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    //       "contentVersion": "1.0.0.0",
+    //       "metadata": {
+    //         "_generator": {
+    //           "name": "bicep",
+    //           "version": "0.4.1124.51302",
+    //           "templateHash": "4658177992051646011"
+    //         }
+    //       },
+    //       "parameters": {
+    //         "resourceBaseName": {
+    //           "type": "string",
+    //           "minLength": 1,
+    //           "metadata": {
+    //             "description": "The base name to use for the resources that will be provisioned."
+    //           }
+    //         }
+    //       },
+    //       "variables": {
+    //         "resourceBaseName": "[parameters('resourceBaseName')]",
+    //         "storageName": "[format('{0}tab', variables('resourceBaseName'))]",
+    //         "storageSku": "Standard_LRS",
+    //         "tabAppDomain": "[concat(variables('resourceBaseName'), '.azurewebsites.net')]",
+    //         "tabAppUrl": "[concat('https://', variables('tabAppDomain'))]"
+    //       },
+    //       "resources": [
+    //         {
+    //           "type": "Microsoft.Storage/storageAccounts",
+    //           "apiVersion": "2021-06-01",
+    //           "name": "[variables('storageName')]",
+    //           "kind": "StorageV2",
+    //           "location": "[resourceGroup().location]",
+    //           "properties": {
+    //             "supportsHttpsTrafficOnly": true
+    //           },
+    //           "sku": {
+    //             "name": "[variables('storageSku')]"
+    //           }
+    //         }
+    //       ],
+    //       "outputs": {
+    //         "resourceId": {
+    //           "type": "string",
+    //           "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+    //         },
+    //         "endpoint": {
+    //           "type": "string",
+    //           "value": "[variables('tabAppUrl')]"
+    //         },
+    //         "domain": {
+    //           "type": "string",
+    //           "value": "[variables('tabAppDomain')]"
+    //         }
+    //       }
+    //     }
+    //   }
+    // },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
@@ -367,7 +342,7 @@
       "apiVersion": "2020-10-01",
       "name": "addTeamsFxSimpleAuthConfiguration",
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision')]",
+        // "[resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision')]",
         "[resourceId('Microsoft.Resources/deployments', 'userAssignedIdentityProvision')]"
       ],
       "properties": {
@@ -498,11 +473,11 @@
     {
       "apiVersion": "2016-08-01",
       "type": "Microsoft.Web/sites",
-      "name": "[variables('botAppName')]",
+      "name": "[variables('siteName')]",
       "location": "[parameters('location')]",
       "kind": "app",
       "properties": {
-        "name": "[variables('botAppName')]",
+        "name": "[variables('siteName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
         "enabled": true,
         "reserved": false,
@@ -558,7 +533,7 @@
           "type": "sourcecontrols",
           "condition": "[not(empty(parameters('gitRepoUrl')))]",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('botAppName'))]"
+            "[resourceId('Microsoft.Web/sites', variables('siteName'))]"
           ],
           "properties": {
             "RepoUrl": "[parameters('gitRepoUrl')]",
@@ -567,20 +542,21 @@
           }
         }
       ]
-    },
-    {
-      "apiVersion": "2015-05-01",
-      "name": "[variables('appInsightsName')]",
-      "type": "Microsoft.Insights/components",
-      "location": "[parameters('location')]",
-      "tags": {
-        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('botAppName'))]": "Resource"
-      },
-      "properties": {
-        "Application_Type": "web",
-        "Request_Source": "rest"
-      }
     }
+    // ,
+    // {
+    //   "apiVersion": "2015-05-01",
+    //   "name": "[variables('appInsightsName')]",
+    //   "type": "Microsoft.Insights/components",
+    //   "location": "[parameters('location')]",
+    //   "tags": {
+    //     "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('siteName'))]": "Resource"
+    //   },
+    //   "properties": {
+    //     "Application_Type": "web",
+    //     "Request_Source": "rest"
+    //   }
+    // }
   ],
   "outputs": {
     "frontendHostingOutput": {
