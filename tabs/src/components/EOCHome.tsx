@@ -62,6 +62,7 @@ export class EOCHome extends React.Component<IEOCHomeProps, IEOCHomeState>  {
 });
 
 appInsights.loadAppInsights();
+                appInsights.trackTrace({ message: "EOCHome" });
 
         this.state = {
             showLoginPage: true,
@@ -244,7 +245,7 @@ appInsights.loadAppInsights();
     }
 
     public render() {
-        appInsights.trackTrace({ message: "EOCHome" });
+
         // let localeStrings = new LocalizedStrings(localizedStrings);
         if (this.state.locale && this.state.locale !== "") {
             localeStrings.setLanguage(this.state.locale);
@@ -252,7 +253,6 @@ appInsights.loadAppInsights();
 
         return (
             <>
-                appInsights.trackTrace({ message: "EOCHome" });
             {this.state.locale === "" ?
                 <>
                     <Loader label={this.state.loaderMessage} size="largest" />
