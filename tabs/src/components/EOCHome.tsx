@@ -57,7 +57,7 @@ export class EOCHome extends React.Component<IEOCHomeProps, IEOCHomeState>  {
         
         const appInsights = new ApplicationInsights({
         config: {
-            instrumentationKey:  process.env.APPINSIGHTS_INSTRUMENTATIONKEY
+            instrumentationKey:  process.env.REACT_APP_APPINSIGHTS_INSTRUMENTATIONKEY
         }
 });
 
