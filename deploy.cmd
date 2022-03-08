@@ -99,10 +99,6 @@ call :ExecuteCmd npm run-script build
 popd
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 4. Build and publish
-echo Building the application
-call :ExecuteCmd dotnet publish "%DEPLOYMENT_SOURCE%\tabs\build" --output "%DEPLOYMENT_TEMP%" --configuration Release -property:KuduDeployment=1
-IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 5. KuduSync
 call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%\tabs\build" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
