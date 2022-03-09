@@ -536,7 +536,7 @@
               "value": "[reference(resourceId('Microsoft.Resources/deployments', 'simpleAuthProvision'), '2020-10-01').outputs.endpoint.value]"
             },
             {
-              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "name": "REACT_APP_APPINSIGHTS_INSTRUMENTATIONKEY",
               "value": "[reference(resourceId('Microsoft.Insights/components/', variables('appInsightsName')), '2015-05-01').InstrumentationKey]"
             },
             {
