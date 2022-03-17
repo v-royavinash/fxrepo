@@ -13,21 +13,21 @@
       "type": "string",
       "minLength": 1,
       "metadata": {
-        "description": "The m365 ClientId that will be provisioned."
+        "description": "The client Id of the Azure AD app, e.g., 123e4567-e89b-12d3-a456-426655440000."
       }
     },
     "ClientSecret": {
       "type": "string",
       "minLength": 1,
       "metadata": {
-        "description": "The m365 client secret that will be provisioned."
+        "description": "The client secret of the Azure AD app."
       }
     },
     "TenantId": {
       "type": "string",
       "minLength": 1,
       "metadata": {
-        "description": "The tenant Id."
+        "description": "The ID of the tenant to which the app will be deployed."
       }
     },
     "m365OauthAuthorityHost": {
@@ -72,14 +72,14 @@
       "metadata": {
         "description": "The URL to the GitHub repository to deploy."
       },
-      "defaultValue": "https://github.com/v-royavinash/fxrepo.git"
+      "defaultValue": "https://github.com/OfficeDev/microsoft-teams-emergency-operations-center.git"
     },
     "gitBranch": {
       "type": "string",
       "metadata": {
         "description": "The branch of the GitHub repository to deploy."
       },
-      "defaultValue": "master"
+      "defaultValue": "main"
     }
   },
   "variables": {
@@ -94,78 +94,6 @@
     "skuFamily": "[if(equals(parameters('hostingPlanSku'), 'Shared'), 'D', take(parameters('hostingPlanSku'), 1))]"
   },
   "resources": [
-    // {
-    //   "type": "Microsoft.Resources/deployments",
-    //   "apiVersion": "2020-10-01",
-    //   "name": "frontendHostingProvision",
-    //   "properties": {
-    //     "expressionEvaluationOptions": {
-    //       "scope": "inner"
-    //     },
-    //     "mode": "Incremental",
-    //     "parameters": {
-    //       "resourceBaseName": {
-    //         "value": "[parameters('resourceBaseName')]"
-    //       }
-    //     },
-    //     "template": {
-    //       "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    //       "contentVersion": "1.0.0.0",
-    //       "metadata": {
-    //         "_generator": {
-    //           "name": "bicep",
-    //           "version": "0.4.1124.51302",
-    //           "templateHash": "4658177992051646011"
-    //         }
-    //       },
-    //       "parameters": {
-    //         "resourceBaseName": {
-    //           "type": "string",
-    //           "minLength": 1,
-    //           "metadata": {
-    //             "description": "The base name to use for the resources that will be provisioned."
-    //           }
-    //         }
-    //       },
-    //       "variables": {
-    //         "resourceBaseName": "[parameters('resourceBaseName')]",
-    //         "storageName": "[format('{0}tab', variables('resourceBaseName'))]",
-    //         "storageSku": "Standard_LRS",
-    //         "tabAppDomain": "[concat(variables('resourceBaseName'), '.azurewebsites.net')]",
-    //         "tabAppUrl": "[concat('https://', variables('tabAppDomain'))]"
-    //       },
-    //       "resources": [
-    //         {
-    //           "type": "Microsoft.Storage/storageAccounts",
-    //           "apiVersion": "2021-06-01",
-    //           "name": "[variables('storageName')]",
-    //           "kind": "StorageV2",
-    //           "location": "[resourceGroup().location]",
-    //           "properties": {
-    //             "supportsHttpsTrafficOnly": true
-    //           },
-    //           "sku": {
-    //             "name": "[variables('storageSku')]"
-    //           }
-    //         }
-    //       ],
-    //       "outputs": {
-    //         "resourceId": {
-    //           "type": "string",
-    //           "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
-    //         },
-    //         "endpoint": {
-    //           "type": "string",
-    //           "value": "[variables('tabAppUrl')]"
-    //         },
-    //         "domain": {
-    //           "type": "string",
-    //           "value": "[variables('tabAppDomain')]"
-    //         }
-    //       }
-    //     }
-    //   }
-    // },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
@@ -342,8 +270,8 @@
       "apiVersion": "2020-10-01",
       "name": "addTeamsFxSimpleAuthConfiguration",
       "dependsOn": [
-        // "[resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision')]",
-        "[resourceId('Microsoft.Resources/deployments', 'userAssignedIdentityProvision')]"
+        "[resourceId('Microsoft.Resources/deployments', 'userAssignedIdentityProvision')]",
+        "[resourceId('Microsoft.Resources/deployments', 'simpleAuthProvision')]"
       ],
       "properties": {
         "expressionEvaluationOptions": {
@@ -365,12 +293,6 @@
           },
           "m365OauthAuthorityHost": {
             "value": "[parameters('m365OauthAuthorityHost')]"
-          },
-          "identifierURI": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.domain.value]"
-          },
-          "tabAppEndpoint": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.endpoint.value]"
           }
         },
         "template": {
@@ -418,12 +340,6 @@
               "metadata": {
                 "description": "The base name to use for the resources that will be provisioned."
               }
-            },
-            "identifierURI": {
-              "type": "string"
-            },
-            "tabAppEndpoint": {
-              "type": "string"
             }
           },
           "variables": {
@@ -439,14 +355,16 @@
             "officeWebAppClientId2": "4765445b-32c6-49b0-83e6-1d93765276ca",
             "outlookDesktopAppClientId": "d3590ed6-52b3-4102-aeff-aad2292ab01c",
             "outlookWebAppClientId": "00000002-0000-0ff1-ce00-000000000000",
-            "authorizedClientApplicationIds": "[format('{0};{1};{2};{3};{4};{5}', variables('teamsMobileOrDesktopAppClientId'), variables('teamsWebAppClientId'), variables('officeWebAppClientId1'), variables('officeWebAppClientId2'), variables('outlookDesktopAppClientId'), variables('outlookWebAppClientId'))]"
+            "authorizedClientApplicationIds": "[format('{0};{1};{2};{3};{4};{5}', variables('teamsMobileOrDesktopAppClientId'), variables('teamsWebAppClientId'), variables('officeWebAppClientId1'), variables('officeWebAppClientId2'), variables('outlookDesktopAppClientId'), variables('outlookWebAppClientId'))]",
+            "identifierURI": "[concat(parameters('resourceBaseName'), '.azurewebsites.net')]",
+            "tabAppEndpoint": "[concat(parameters('resourceBaseName'), '.azurewebsites.net')]"
           },
           "resources": [
             {
               "type": "Microsoft.Web/sites/config",
               "apiVersion": "2021-02-01",
               "name": "[format('{0}/appsettings', variables('webAppName'))]",
-              "properties": "[createObject('AAD_METADATA_ADDRESS', variables('aadMetadataAddress'),'ALLOWED_APP_IDS', variables('authorizedClientApplicationIds'),'IDENTIFIER_URI', format('api://{0}/{1}', parameters('identifierURI'),parameters('ClientId')),'CLIENT_ID', variables('ClientId'),'CLIENT_SECRET', variables('ClientSecret'),'OAUTH_AUTHORITY',variables('oauthAuthority'), 'TAB_APP_ENDPOINT', parameters('tabAppEndpoint'),'WEBSITE_NODE_DEFAULT_VERSION','6.9.1')]"
+              "properties": "[createObject('AAD_METADATA_ADDRESS', variables('aadMetadataAddress'),'ALLOWED_APP_IDS', variables('authorizedClientApplicationIds'),'IDENTIFIER_URI', format('api://{0}/{1}', variables('identifierURI'),parameters('ClientId')),'CLIENT_ID', variables('ClientId'),'CLIENT_SECRET', variables('ClientSecret'),'OAUTH_AUTHORITY',variables('oauthAuthority'), 'TAB_APP_ENDPOINT', variables('tabAppEndpoint'),'WEBSITE_NODE_DEFAULT_VERSION','6.9.1')]"
             }
           ]
         }
@@ -511,7 +429,7 @@
               "value": "[reference(resourceId('Microsoft.Resources/deployments', 'simpleAuthProvision'), '2020-10-01').outputs.endpoint.value]"
             },
             {
-              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "name": "REACT_APP_APPINSIGHTS_INSTRUMENTATIONKEY",
               "value": "[reference(resourceId('Microsoft.Insights/components/', variables('appInsightsName')), '2015-05-01').InstrumentationKey]"
             },
             {
@@ -542,32 +460,22 @@
           }
         }
       ]
+    },
+    {
+      "apiVersion": "2015-05-01",
+      "name": "[variables('appInsightsName')]",
+      "type": "Microsoft.Insights/components",
+      "location": "[parameters('location')]",
+      "tags": {
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('siteName'))]": "Resource"
+      },
+      "properties": {
+        "Application_Type": "web",
+        "Request_Source": "rest"
+      }
     }
-    // ,
-    // {
-    //   "apiVersion": "2015-05-01",
-    //   "name": "[variables('appInsightsName')]",
-    //   "type": "Microsoft.Insights/components",
-    //   "location": "[parameters('location')]",
-    //   "tags": {
-    //     "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('siteName'))]": "Resource"
-    //   },
-    //   "properties": {
-    //     "Application_Type": "web",
-    //     "Request_Source": "rest"
-    //   }
-    // }
   ],
   "outputs": {
-    "frontendHostingOutput": {
-      "type": "Object",
-      "value": {
-        "teamsFxPluginId": "fx-resource-frontend-hosting",
-        "domain": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.domain.value]",
-        "endpoint": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.endpoint.value]",
-        "storageResourceId": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.resourceId.value]"
-      }
-    },
     "identityOutput": {
       "type": "Object",
       "value": {
